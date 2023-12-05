@@ -3,8 +3,8 @@ import { useUserAuth } from "./user-auth.js";
 import ItemList from './item-list.js';
 import NewItem from "./new-item.js";
 import MealIdeas from "./meal-ideas.js";
-import getItems from "./_services/shopping-list-service.js";
-import addItem from "./_services/shopping-list-service.js";
+import getItems from "../_services/shopping-list-service.js";
+import addItem from "../_services/shopping-list-service.js";
 
 export default function Page(){
 
