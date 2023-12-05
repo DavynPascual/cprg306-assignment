@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useUserAuth } from "./user-auth.js";
 import ItemList from './item-list.js';
-import dataset from './item.json';
 import NewItem from "./new-item.js";
 import MealIdeas from "./meal-ideas.js";
+import getItems from "./_services/shopping-list-service.js";
+import addItem from "./_services/shopping-list-service.js";
 
 export default function Page(){
 
-    const [items, setItems] = useState(dataset);
+    const [items, setItems] = useState([]);
     const [selectedItemName, setSelectedItemName] = useState('');
     const [user, setUser] = useState(null);
 
@@ -20,9 +21,25 @@ export default function Page(){
         fetchUser();
     }, []);
 
-    const handleAddItem = (newItem) => {
-        const updatedItems = [...items, newItem];
-        setItems(updatedItems);
+    useEffect(() => {
+        const loadItems = async () => {
+            if (user) {
+                const userId = user.uid;
+                const shoppingListItems = await getItems(userId);
+                setItems(shoppingListItems);
+            }
+        };
+
+        loadItems();
+    }, [user]);
+
+    const handleAddItem = async (newItem) => {
+        if (user) {
+            const userId = user.uid;
+            const addedItem = await addItem(userId, newItem);
+            const updatedItems = [...items, { ...addedItem, id: addedItem.id }];
+            setItems(updatedItems);
+        }
     };
 
     const handleItemSelect = (itemName) => {
